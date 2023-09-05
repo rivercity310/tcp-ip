@@ -1,0 +1,4 @@
+﻿  Server.cpp
+MSVCRTD.lib(exe_main.obj) : error LNK2019: main"int __cdecl invoke_main(void)" (?invoke_main@@YAHXZ) 함수에서 참조되는 확인할 수 없는 외부 기호
+C:\Users\seungsu\Desktop\projects\Server\x64\Debug\Server.exe : fatal error LNK1120: 1개의 확인할 수 없는 외부 참조입니다.
+C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppCommon.targets(1134,5): error MSB6006: "link.exe"이(가) 종료되었습니다(코드: 1120).
