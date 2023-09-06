@@ -18,11 +18,12 @@ void err_quit(const char* msg)
 {
 	LPVOID lpMsgBuf;
 
+	// 1. 오류 발생시 소켓 함수의 리턴값과 WSAGetLastError() 함수를 통해 구체적인 오류 코드를 얻을 수 있다.
 	// 2. WSAGetLastError()가 리턴해주는 오류 코드에 대응하는 오류 메세지를 FormatMessage()를 통해 얻을 수 있다.
 	FormatMessageA(
 		FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM,
 		NULL,
-		WSAGetLastError(),  // 1. 소켓 함수의 리턴값으로 오류 발생시 이 함수를 통해 구체적인 오류 코드를 얻을 수 있다.
+		WSAGetLastError(), 
 		MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
 		(char*)&lpMsgBuf,
 		0,
