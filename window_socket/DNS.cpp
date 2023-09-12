@@ -3,9 +3,8 @@
 
 #include "Common.h"
 
-#define TESTNAME "www.naver.com"
+#define TESTNAME "www.facebook.com"
 
-extern void err_display(const char*);
 
 /* 도메인 이름 -> IPv4 주소 */
 bool getIPAddr(const char* name, struct in_addr* addr)
