@@ -1,15 +1,10 @@
 #define _WINSOCK_DEPRECATED_NO_WARNINGS  // 구형 소켓 API 사용 시 경고 끄기 
 #define _CRT_SECURE_NO_WARNINGS // 구형 C 함수 사용 시 경고 끄기
 
-#include <winsock2.h>     // WinSock 메인 헤더
-#include <ws2tcpip.h>     // WinSock 확장 헤더
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <tchar.h>
 #include "Common.h"
 
+#define SERVERPORT 9000
+#define BUFSIZE    512
 
 #pragma comment(lib, "ws2_32")  // ws2_32.lib 링크
 
@@ -58,7 +53,7 @@ DWORD WINAPI TCPServer4(LPVOID arg)
 {
 	int retval;
 
-	// Socket 생성
+	// Socket 생성 ( AF_INET = IPv4, AF_INET6 = IPv6, AF_BTH = 블루투스, SOCK_STREAM = TCP, SOCK_DGRAM = UDP )
 	SOCKET listen_sock = socket(AF_INET, SOCK_STREAM, 0);
 	if (listen_sock == INVALID_SOCKET) err_quit("socket()");
 
@@ -72,9 +67,9 @@ DWORD WINAPI TCPServer4(LPVOID arg)
 	if (retval == SOCKET_ERROR) err_quit("bind()");
 
 	// listen()
-	retval = listen(listen_sock, SOMAXCONN);
+	// retval = listen(listen_sock, SOMAXCONN);
 	if (retval == SOCKET_ERROR) err_quit("listen()");
-
+	
 	// 데이터 통신에 사용할 변수
 	SOCKET client_sock;
 	struct sockaddr_in clientaddr;
@@ -202,7 +197,7 @@ DWORD WINAPI TCPServer6(LPVOID arg)
 	return 0;
 }
 
-int main(int argc, char* argy[]) 
+int InitWinSock() 
 {
 	// WinSock 초기화
 	WSADATA wsa;
