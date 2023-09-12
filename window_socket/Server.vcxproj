@@ -128,8 +128,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="ByteOrder.cpp" />
+    <ClCompile Include="IPAddr.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Server.cpp" />
+    <ClCompile Include="Socket.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common.h" />
