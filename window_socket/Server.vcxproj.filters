@@ -27,6 +27,9 @@
     <ClCompile Include="IPAddr.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="DNS.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common.h">
