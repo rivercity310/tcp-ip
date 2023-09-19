@@ -1,59 +1,16 @@
-#define _WINSOCK_DEPRECATED_NO_WARNINGS  // 구형 소켓 API 사용 시 경고 끄기 
-#define _CRT_SECURE_NO_WARNINGS // 구형 C 함수 사용 시 경고 끄기
-
 #include "Common.h"
 
 #define SERVERPORT 9000
 #define BUFSIZE    512
 
-#pragma comment(lib, "ws2_32")  // ws2_32.lib 링크
+#pragma comment(lib, "ws2_32")
 
-// 소켓 함수 오류 출력 후 종료
-void err_quit(const char* msg)
-{
-	LPVOID lpMsgBuf;
-
-	// 1. 오류 발생시 소켓 함수의 리턴값과 WSAGetLastError() 함수를 통해 구체적인 오류 코드를 얻을 수 있다.
-	// 2. WSAGetLastError()가 리턴해주는 오류 코드에 대응하는 오류 메세지를 FormatMessage()를 통해 얻을 수 있다.
-	FormatMessageA(
-		FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM,
-		NULL,
-		WSAGetLastError(), 
-		MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-		(char*)&lpMsgBuf,
-		0,
-		NULL
-	);
-
-	MessageBoxA(NULL, (const char*)lpMsgBuf, msg, MB_ICONERROR);
-	LocalFree(lpMsgBuf);
-	exit(1);
-}
-
-// 소켓 함수 오류 출력
-void err_display(const char* msg)
-{
-	LPVOID lpMsgBuf;
-	FormatMessageA(
-		FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM,
-		NULL,
-		WSAGetLastError(),
-		MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-		(char*)&lpMsgBuf,
-		0,
-		NULL
-	);
-
-	printf("[%s] %s\n", msg, (char*)lpMsgBuf);
-	LocalFree(lpMsgBuf);
-}
-
-// TCP 서버 (IPv4)
+// TCP 서버(IPv4)
 DWORD WINAPI TCPServer4(LPVOID arg)
 {
 	int retval;
 
-	// Socket 생성 ( AF_INET = IPv4, AF_INET6 = IPv6, AF_BTH = 블루투스, SOCK_STREAM = TCP, SOCK_DGRAM = UDP )
+	// 소켓 생성
 	SOCKET listen_sock = socket(AF_INET, SOCK_STREAM, 0);
 	if (listen_sock == INVALID_SOCKET) err_quit("socket()");
 
@@ -63,13 +20,13 @@ DWORD WINAPI TCPServer4(LPVOID arg)
 	serveraddr.sin_family = AF_INET;
 	serveraddr.sin_addr.s_addr = htonl(INADDR_ANY);
 	serveraddr.sin_port = htons(SERVERPORT);
-	retval = bind(listen_sock, (struct sockaddr*)&serveraddr, sizeof(sockaddr));
+	retval = bind(listen_sock, (struct sockaddr*)&serveraddr, sizeof(serveraddr));
 	if (retval == SOCKET_ERROR) err_quit("bind()");
 
 	// listen()
-	// retval = listen(listen_sock, SOMAXCONN);
+	retval = listen(listen_sock, SOMAXCONN);
 	if (retval == SOCKET_ERROR) err_quit("listen()");
-	
+
 	// 데이터 통신에 사용할 변수
 	SOCKET client_sock;
 	struct sockaddr_in clientaddr;
@@ -85,12 +42,9 @@ DWORD WINAPI TCPServer4(LPVOID arg)
 			break;
 		}
 
-		// 접속한 클라이언트의 정보 출력
-		printf(
-			"\n[TCP 서버] 클라이언트 접속: IP 주소=%s, 포트 번호=%d\n",
-			inet_ntoa(clientaddr.sin_addr),
-			ntohs(clientaddr.sin_port)
-		);
+		// 접속한 클라이언트 정보 출력
+		printf("\n[TCP 서버] 클라이언트 접속: IP 주소=%s, 포트 번호=%d\n",
+			inet_ntoa(clientaddr.sin_addr), ntohs(clientaddr.sin_port));
 
 		// 클라이언트와 데이터 통신
 		while (1) {
@@ -99,10 +53,9 @@ DWORD WINAPI TCPServer4(LPVOID arg)
 			if (retval == SOCKET_ERROR) {
 				err_display("recv()");
 				break;
-			} 
-			else if (retval == 0) {
-				break;
 			}
+			else if (retval == 0)
+				break;
 
 			// 받은 데이터 출력
 			buf[retval] = '\0';
@@ -111,11 +64,8 @@ DWORD WINAPI TCPServer4(LPVOID arg)
 
 		// 소켓 닫기
 		closesocket(client_sock);
-		printf(
-			"[TCP 서버] 클라이언트 종료: IP 주소=%s, 포트 번호=%d\n",
-			inet_ntoa(clientaddr.sin_addr),
-			ntohs(clientaddr.sin_port)
-		);
+		printf("[TCP 서버] 클라이언트 종료: IP 주소=%s, 포트 번호=%d\n",
+			inet_ntoa(clientaddr.sin_addr), ntohs(clientaddr.sin_port));
 	}
 
 	// 소켓 닫기
@@ -197,21 +147,33 @@ DWORD WINAPI TCPServer6(LPVOID arg)
 	return 0;
 }
 
-int InitWinSock() 
+void InitWinSock()
 {
-	// WinSock 초기화
+	// 윈속 초기화
 	WSADATA wsa;
-	if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0) {
-		return 1;
-	}
+	if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0)
+		return;
 
-	// 멀티스레드를 이용하여 두 개의 서버를 동시 구동
+	// 멀티스레드를 이용하여 두 개의 서버를 동시에 구동한다.
+	/*
 	HANDLE hThread[2];
 	hThread[0] = CreateThread(NULL, 0, TCPServer4, NULL, 0, NULL);
 	hThread[1] = CreateThread(NULL, 0, TCPServer6, NULL, 0, NULL);
 	WaitForMultipleObjects(2, hThread, TRUE, INFINITE);
+	*/
 
-	// WinSock 종료
+	SOCKET sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+	if (sock == INVALID_SOCKET) err_quit("socket()");
+	printf("[알림] TCP 소켓 생성 성공\n");
+
+	SOCKET sock2 = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+	if (sock == INVALID_SOCKET) err_quit("socket()");
+	printf("[알림] UDP 소켓 생성 성공\n");
+
+	closesocket(sock);
+	closesocket(sock2);
+
+	// 윈속 종료
 	WSACleanup();
-	return 0;
+	return;
 }

@@ -1,13 +1,10 @@
-#define _WINSOCK_DEPRECATED_NO_WARNINGS  // 구형 소켓 API 사용 시 경고 끄기 
-#define _CRT_SECURE_NO_WARNINGS // 구형 C 함수 사용 시 경고 끄기
-
 #include "Common.h"
 
-#define TESTNAME "www.facebook.com"
+#define TESTNAME "www.google.com"
 
 
 /* 도메인 이름 -> IPv4 주소 */
-bool getIPAddr(const char* name, struct in_addr* addr)
+static bool getIPAddr(const char* name, struct in_addr* addr)
 {
 	struct hostent* ptr = gethostbyname(name);
 	if (ptr == NULL) {
@@ -24,7 +21,7 @@ bool getIPAddr(const char* name, struct in_addr* addr)
 }
 
 /* IPv4 주소 -> 도메인 이름 */
-bool getDomainName(struct in_addr addr, char* name, int namelen) 
+static bool getDomainName(struct in_addr addr, char* name, int namelen) 
 {
 	struct hostent* ptr = gethostbyaddr((const char*)&addr, sizeof(addr), AF_INET);
 	if (ptr == NULL) {
