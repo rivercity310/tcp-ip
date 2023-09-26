@@ -5,8 +5,8 @@ extern void DNSTest();
 
 int main(int argc, char* argv[])
 {
-	InitWinSock();
+	// InitWinSock();
 	// ByteOrder();
-	// IpAddr();
+	IpAddr();
 	// DNSTest();
 }

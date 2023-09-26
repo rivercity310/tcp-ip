@@ -61,5 +61,6 @@ void DNSTest()
 	}
 
 	WSACleanup();
-
+	exit(0);
+	return;
 }

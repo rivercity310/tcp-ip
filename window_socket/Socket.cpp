@@ -155,13 +155,13 @@ void InitWinSock()
 		return;
 
 	// 멀티스레드를 이용하여 두 개의 서버를 동시에 구동한다.
-	/*
+
 	HANDLE hThread[2];
 	hThread[0] = CreateThread(NULL, 0, TCPServer4, NULL, 0, NULL);
 	hThread[1] = CreateThread(NULL, 0, TCPServer6, NULL, 0, NULL);
 	WaitForMultipleObjects(2, hThread, TRUE, INFINITE);
-	*/
 
+	/*
 	SOCKET sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 	if (sock == INVALID_SOCKET) err_quit("socket()");
 	printf("[알림] TCP 소켓 생성 성공\n");
@@ -172,8 +172,10 @@ void InitWinSock()
 
 	closesocket(sock);
 	closesocket(sock2);
+	*/
 
 	// 윈속 종료
 	WSACleanup();
+	exit(0);
 	return;
-}
+}	

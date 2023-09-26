@@ -39,4 +39,5 @@ void IpAddr()
 	// WinSock Á¾·á
 	WSACleanup();
 	exit(0);
+	return;
 }
