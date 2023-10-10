@@ -132,7 +132,6 @@
     <ClCompile Include="DNS.cpp" />
     <ClCompile Include="IPAddr.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Socket.cpp" />
     <ClCompile Include="TCPClient.cpp" />
   </ItemGroup>
   <ItemGroup>

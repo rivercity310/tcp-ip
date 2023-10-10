@@ -1,14 +1,12 @@
-extern void InitWinSock();
 extern void ByteOrder();
 extern void IpAddr();
 extern void DNSTest();
-extern void TCPClient();
+extern void TcpClientEx();
 
 int main(int argc, char* argv[])
 {
-	// InitWinSock();
 	// ByteOrder();
 	// IpAddr();
 	// DNSTest();
-	TCPClient();
+	TcpClientEx();
 }
