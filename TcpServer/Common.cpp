@@ -18,6 +18,7 @@ void err_quit(const char* msg)
 		NULL
 	);
 
+	printf("[%s] %s\n", msg, (char*)lpMsgBuf);
 	MessageBoxA(NULL, (const char*)lpMsgBuf, msg, MB_ICONERROR);
 	LocalFree(lpMsgBuf);
 	exit(1);    // exit 0 정상종료, 1 에러종료

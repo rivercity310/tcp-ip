@@ -1,10 +1,11 @@
 #include "Common.h"
 
-#define SERVERPORT   9000
-#define SERVERPORT6  9090
-#define BUFSIZE      512
-#define TCPVERSION4  4
-#define TCPVERSION6  6
+#define SERVERPORT    9000
+#define SERVERPORT6   9090
+#define SERVERPORTUDP 9009
+#define BUFSIZE       512
+#define TCPVERSION4   4
+#define TCPVERSION6   6
 
 #pragma comment(lib, "ws2_32")
 
@@ -97,7 +98,7 @@ static void ConnectToClient(SOCKET listen_sock, TCPVERSION v) {
 
 static DWORD WINAPI TcpServer(LPVOID arg) {
 	// Server Socket 생성
-	SOCKET listen_sock = socket(AF_INET, SOCK_STREAM, 0);
+	SOCKET listen_sock = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
 	if (listen_sock == INVALID_SOCKET) {
 		err_quit("socket()");
 	}
@@ -131,7 +132,7 @@ static DWORD WINAPI TCPServer6(LPVOID arg) {
 	int retval;
 
 	// Socket Init
-	SOCKET listen_sock = socket(AF_INET6, SOCK_STREAM, 0);
+	SOCKET listen_sock = socket(PF_INET6, SOCK_STREAM, IPPROTO_TCP);
 	if (listen_sock == INVALID_SOCKET) err_quit("socket()");
 	int no = 1;
 	setsockopt(listen_sock, IPPROTO_IPV6, IPV6_V6ONLY, (const char*)&no, sizeof(no));
@@ -154,6 +155,52 @@ static DWORD WINAPI TCPServer6(LPVOID arg) {
 	return 0;
 }
 
+static DWORD WINAPI UdpServer(LPVOID args) {
+	int retval;
+	
+	// UDP SOCKET INIT
+	SOCKET listen_sock = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP);
+	if (listen_sock == INVALID_SOCKET) err_quit("socket()");
+
+	// BIND
+	SOCKADDR_IN serveraddr;
+	ZeroMemory(&serveraddr, sizeof(serveraddr));
+	serveraddr.sin_family = AF_INET;
+	serveraddr.sin_addr.S_un.S_addr = INADDR_ANY;
+	serveraddr.sin_port = htons(SERVERPORTUDP);
+	retval = bind(listen_sock, (SOCKADDR*)&serveraddr, sizeof(serveraddr));
+
+	// 데이터 통신에 사용할 변수
+	SOCKADDR_IN clientaddr;
+	int addrlen;
+	char buf[BUFSIZE + 1];
+
+	while (1) {
+		addrlen = sizeof(clientaddr);
+		retval = recvfrom(listen_sock, buf, BUFSIZE, 0, (SOCKADDR*)&clientaddr, &addrlen);
+		if (retval == SOCKET_ERROR) {
+			err_display("recvfrom()");
+			break;
+		}
+
+		// 받은 데이터 출력
+		buf[retval] = '\0';
+		char addr[INET_ADDRSTRLEN];
+		inet_ntop(AF_INET, &clientaddr.sin_addr, addr, sizeof(addr));
+		printf("[UDP/%s:%d] %s\n", addr, ntohs(clientaddr.sin_port), buf);
+
+		// 데이터 보내기
+		retval = sendto(listen_sock, buf, retval, 0, (SOCKADDR*)&clientaddr, sizeof(clientaddr));
+		if (retval == SOCKET_ERROR) {
+			err_display("sendto()");
+			break;
+		}
+	}
+
+	closesocket(listen_sock);
+	return 0;
+}
+
 int main() {
 	// WINSOCK 초기화
 	WSADATA wsa;
@@ -162,10 +209,11 @@ int main() {
 	}
 	
 	// 멀티스레드를 이용하여 두개의 서버 구동
-	HANDLE hThread[2];
+	HANDLE hThread[3];
 	hThread[0] = CreateThread(NULL, 0, TcpServer, NULL, 0, NULL);
 	hThread[1] = CreateThread(NULL, 0, TCPServer6, NULL, 0, NULL);
-	WaitForMultipleObjects(2, hThread, TRUE, INFINITE);
+	hThread[2] = CreateThread(NULL, 0, UdpServer, NULL, 0, NULL);
+	WaitForMultipleObjects(3, hThread, TRUE, INFINITE);
 
 	// WINSOCK 종료
 	WSACleanup();

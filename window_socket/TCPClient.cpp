@@ -1,10 +1,11 @@
 #include "Common.h"
 
-#define SERVERIP     "127.0.0.1"
-#define SERVERIP6    "::1"
-#define SERVERPORT   9000
-#define SERVERPORT6  9090
-#define BUFSIZE      512
+#define SERVERIP       "127.0.0.1"
+#define SERVERIP6      "::1"
+#define SERVERPORT     9000
+#define SERVERPORT6    9090
+#define SERVERPORTUDP  9009
+#define BUFSIZE        512
 
 #pragma comment(lib, "ws2_32")
 
@@ -138,6 +139,52 @@ static void TcpClient6() {
 	closesocket(client_sock);
 }
 
+static void UdpClient() {
+	int retval;
+	
+	// SOCKET
+	SOCKET sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+
+	SOCKADDR_IN serveraddr;
+	memset(&serveraddr, 0, sizeof(serveraddr));
+	serveraddr.sin_family = AF_INET;
+	serveraddr.sin_port = htons(SERVERPORTUDP);
+	inet_pton(serveraddr.sin_family, SERVERIP, &serveraddr.sin_addr);
+
+	// connect()
+	retval = connect(sock, (SOCKADDR*)&serveraddr, sizeof(serveraddr));
+	if (retval == SOCKET_ERROR) err_quit("connect()");
+	
+	// 서버와 데이터 통신
+	SOCKADDR_IN peeraddr;
+	int addrlen;
+	char buf[BUFSIZE + 1];
+	int len;
+	boolean first = true;
+
+	while (1) {
+		printf("\n[보낼 데이터] ");
+		if (first) {
+			getchar();
+			first = false;
+		}
+		if (fgets(buf, BUFSIZE + 1, stdin) == NULL) break;
+
+		len = (int)strlen(buf);
+		if (buf[len - 1] == '\n') buf[len - 1] = '\0';
+		if (strlen(buf) == 0) break;
+
+		retval = sendto(sock, buf, (int)strlen(buf), 0, (SOCKADDR*)&serveraddr, sizeof(serveraddr));
+		if (retval == SOCKET_ERROR) {
+			err_display("sendto()");
+			break;
+		}
+		printf("[UDP CLIENT] %d바이트 전송\n", retval);
+	}
+
+	closesocket(sock);
+}
+
 void TcpClientEx() {
 	// WINSOCK 초기화
 	WSADATA wsa;
@@ -146,11 +193,12 @@ void TcpClientEx() {
 	// User Prompt
 	int sel;
 	puts("[사용할 연결을 선택하세요]");
-	puts("(1)IPv4 (2)IPv6");
+	puts("(1)IPv4 (2)IPv6 (3) UDP");
 	scanf_s("%d", &sel);
 
 	if (sel == 1) TcpClient4();
-	else TcpClient6();
+	else if (sel == 2) TcpClient6();
+	else if (sel == 3) UdpClient();
 
 	// WINSOCK 종료
 	WSACleanup();
