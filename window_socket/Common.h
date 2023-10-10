@@ -9,7 +9,6 @@
 #include <string.h>
 #include <tchar.h>
 
-
 void err_quit(const char* msg);
 void err_display(const char* msg);
 void err_display(int errorcode);
