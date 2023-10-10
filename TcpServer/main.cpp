@@ -5,6 +5,21 @@
 
 #pragma comment(lib, "ws2_32")
 
+static bool getDomainName(struct in_addr addr, char* name, int namelen) {
+	HOSTENT* ptr = gethostbyaddr((const char*)&addr, sizeof(addr), AF_INET);
+	if (ptr == NULL) {
+		err_display("getDomainName()");
+		return false;
+	}
+
+	if (ptr->h_addrtype != AF_INET) {
+		return false;
+	}
+
+	strncpy(name, ptr->h_name, namelen);
+	return true;
+}
+
 static SOCKET* TcpServer() {
 	// Server Socket 생성
 	SOCKET listen_sock = socket(AF_INET, SOCK_STREAM, 0);
@@ -47,10 +62,13 @@ static SOCKET* TcpServer() {
 			break;
 		}
 
+		char name[256];
+		getDomainName(clientaddr.sin_addr, name, sizeof(name));
 		printf(
-			"\n[TCP 서버] 클라이언트 접속: IP 주소 = %s, 포트번호 = %d\n",
+			"\n[TCP 서버] 클라이언트 접속: IP 주소 = %s, 포트번호 = %d, DNS = %s\n",
 			inet_ntoa(clientaddr.sin_addr),
-			ntohs(clientaddr.sin_port)
+			ntohs(clientaddr.sin_port),
+			name
 		);
 
 		// 클라이언트가 보낸 데이터 받기
@@ -67,9 +85,10 @@ static SOCKET* TcpServer() {
 
 			buf[retval] = '\0';
 			printf(
-				"[TCP/%s %d] %s\n",
+				"[TCP/%s %d %s] %s\n",
 				inet_ntoa(clientaddr.sin_addr),
 				ntohs(clientaddr.sin_port),
+				name,
 				buf
 			);
 
@@ -83,9 +102,10 @@ static SOCKET* TcpServer() {
 
 		closesocket(client_sock);
 		printf(
-			"\n[TCP 서버] 클라이언트 종료: IP 주소 = %s, 포트번호 = %d\n",
+			"\n[TCP 서버] 클라이언트 종료: IP 주소 = %s, 포트번호 = %d, DNS = %s\n",
 			inet_ntoa(clientaddr.sin_addr),
-			ntohs(clientaddr.sin_port)
+			ntohs(clientaddr.sin_port),
+			name
 		);
 	}
 	
