@@ -30,26 +30,26 @@ static int recvn(SOCKET s, char* buf, int len, int flags) {
 	return (len - left);
 }
 
-static void ConnectToServer(SOCKET* sock) {
+static void ConnectToServer(SOCKET sock) {
 	// DATA 통신
-	char buf[BUFSIZE + 1];
+	char buf[BUFSIZE];
 	int len, retval;
 
 	while (1) {
 		// 입력받기
 		printf("\n[보낼 데이터] ");
-		if (fgets(buf, BUFSIZE + 1, stdin) == NULL) {
+		if (fgets(buf, BUFSIZE, stdin) == NULL) {
 			break;
 		}
 
 		// 마지막 엔터키값을 NULL 값으로 치환
-		len = sizeof(buf);
+		len = strlen(buf);
 		if (buf[len - 1] == '\n') {
 			buf[len - 1] = '\0';
 		}
 
 		// 데이터 보내기 (send(): 보낸 byte 수 반환)
-		retval = send(*sock, buf, strlen(buf), 0);
+		retval = send(sock, buf, strlen(buf), 0);
 		if (retval == SOCKET_ERROR) {
 			err_display("send()");
 			break;
@@ -57,7 +57,7 @@ static void ConnectToServer(SOCKET* sock) {
 		printf("[TCP CLIENT] %d 바이트를 보냈습니다 \n", retval);
 
 		// 데이터 받기
-		retval = recv(*sock, buf, retval, 0);
+		retval = recv(sock, buf, retval, 0);
 		if (retval == SOCKET_ERROR) {
 			err_display("recv()");
 			break;
@@ -99,7 +99,7 @@ static void TcpClient4() {
 	retval = connect(sock, (SOCKADDR*)&serveraddr, sizeof(serveraddr));
 	if (retval == SOCKET_ERROR) err_quit("connect()");
 
-	ConnectToServer(&sock);
+	ConnectToServer(sock);
 
 	// SOCKET 닫기
 	closesocket(sock);
@@ -132,7 +132,7 @@ static void TcpClient6() {
 	retval = connect(client_sock, (SOCKADDR*)&serveraddr, sizeof(serveraddr));
 	if (retval == SOCKET_ERROR) err_quit("connect()");
 
-	ConnectToServer(&client_sock);
+	ConnectToServer(client_sock);
 
 	// SOCKET ClOSE
 	closesocket(client_sock);

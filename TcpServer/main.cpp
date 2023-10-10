@@ -82,7 +82,7 @@ static void ConnectToClient(SOCKET listen_sock, TCPVERSION v) {
 
 			// 클라이언트에서 전달된 데이터 출력
 			buf[retval] = '\0';
-			printf("%s", buf);
+			printf("[%d바이트 전달] %s", retval, buf);
 
 			retval = send(client_sock, buf, BUFSIZE, 0);
 			if (retval == SOCKET_ERROR) {
