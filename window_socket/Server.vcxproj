@@ -24,6 +24,7 @@
     <ProjectGuid>{ec368395-087e-4f7a-948a-f0806f297ab6}</ProjectGuid>
     <RootNamespace>Server</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>Client</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -132,7 +133,7 @@
     <ClCompile Include="DNS.cpp" />
     <ClCompile Include="IPAddr.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="TCPClient.cpp" />
+    <ClCompile Include="TcpClient.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common.h" />

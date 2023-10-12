@@ -30,7 +30,7 @@
     <ClCompile Include="Common.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="TCPClient.cpp">
+    <ClCompile Include="TcpClient.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
