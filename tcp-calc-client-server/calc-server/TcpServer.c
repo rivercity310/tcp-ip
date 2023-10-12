@@ -9,7 +9,7 @@ void TcpServerStart() {
 	// WinSock 초기화
 	WSADATA wsa;
 	if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0) {
-		exit(1);
+		err_quit("winsock init fail");
 	}
 
 	// Socket 초기화
@@ -92,5 +92,4 @@ void TcpServerStart() {
 
 	// WinSock Close
 	WSACleanup();
-	exit(0);
 }
