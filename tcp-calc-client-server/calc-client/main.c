@@ -1,4 +1,4 @@
-extern void TcpClientStart();
+ extern void TcpClientStart();
 
 int main() {
 	TcpClientStart();
