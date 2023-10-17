@@ -18,3 +18,7 @@ SOCKET* InitClientSocket4(int* retval, int clientport);
 
 /* IPv6 TCP Client Socket */
 SOCKET* InitClientSocket6(int* retval, int clientport);
+
+/* 에러 처리 함수 */
+void err_quit(const char* msg);
+void err_display(const char* msg);

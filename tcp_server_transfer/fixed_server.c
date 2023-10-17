@@ -1,9 +1,9 @@
 #include "common.h"
 
-#define BUFSIZE    50
+#define BUFSIZE 50
 
 
-void FixedTcp6Server() {
+void FixedTcpServer6() {
 	int retval = NULL;
 	SOCKET sock = *InitServerSocket6(&retval);
 	
@@ -15,7 +15,10 @@ void FixedTcp6Server() {
 	while (1) {
 		addrlen = sizeof(clientaddr);
 		clientsock = accept(sock, (struct sockaddr*)&clientaddr, &addrlen);
-		if (clientsock == INVALID_SOCKET) exit(1);
+		if (clientsock == INVALID_SOCKET) {
+			err_display("accept()");
+			break;
+		}
 
 		// 접속 클라이언트 정보 출력
 		char addr[INET6_ADDRSTRLEN];
@@ -25,7 +28,10 @@ void FixedTcp6Server() {
 		// 데이터 통신
 		while (1) {
 			retval = recv(clientsock, buf, BUFSIZE, MSG_WAITALL);
-			if (retval == SOCKET_ERROR) exit(1);
+			if (retval == SOCKET_ERROR) {
+				err_display("recv()");
+				break;
+			}
 			else if (retval == 0) break;
 
 			// 받은 데이터 출력

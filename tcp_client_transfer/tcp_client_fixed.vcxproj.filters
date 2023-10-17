@@ -24,6 +24,9 @@
     <ClCompile Include="common.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="variable_client.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="common.h">

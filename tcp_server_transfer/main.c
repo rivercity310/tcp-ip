@@ -1,8 +1,7 @@
 #include <winsock2.h>
 
-extern void FixedTcp6Server();
-extern void VariableTcpServer();
-
+extern void FixedTcpServer6();
+extern void VariableTcpServer4();
 
 int main() {
 	WSADATA wsa;
@@ -10,7 +9,8 @@ int main() {
 		exit(1);
 	}
 
-	FixedTcp6Server();
+	FixedTcpServer6();
+	// VariableTcpServer4();
 
 	WSACleanup();
 
