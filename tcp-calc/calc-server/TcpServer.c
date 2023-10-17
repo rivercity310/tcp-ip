@@ -45,7 +45,6 @@ void TcpServerStart() {
 	int i, sum;
 
 	struct calc_args calcargs;
-	memset(&calcargs, 0, sizeof(calcargs));
 
 	while (1) {
 		clientsock = accept(sock, (struct sockaddr*)&clientaddr, &len);

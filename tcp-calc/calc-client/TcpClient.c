@@ -52,7 +52,6 @@ void TcpClientStart() {
 	int* tmp = malloc(sizeof(int));
 	int i;
 	int len = sizeof(calcargs);
-	memset(&calcargs, 0, len);
 
 	while (1) {
 		// 사용자 입력받기
