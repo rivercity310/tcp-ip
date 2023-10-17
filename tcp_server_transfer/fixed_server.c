@@ -1,34 +1,12 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <tchar.h>
-#include <string.h>
-#include <winsock2.h>
-#include <ws2tcpip.h>
+#include "common.h"
 
-#define SERVERPORT 9000
-#define SERVERIP   "::1"
 #define BUFSIZE    50
 
-#pragma comment(lib, "ws2_32")
 
 void FixedTcp6Server() {
-	SOCKET sock = socket(PF_INET6, SOCK_STREAM, IPPROTO_TCP);
-	if (sock == INVALID_SOCKET) exit(1);
-
-	int retval;
-
-	struct sockaddr_in6 serveraddr;
-	memset(&serveraddr, 0, sizeof(serveraddr));
-	serveraddr.sin6_family = AF_INET6;
-	serveraddr.sin6_port = htons(SERVERPORT);
-	serveraddr.sin6_addr = in6addr_any;
-
-	retval = bind(sock, (struct sockaddr*)&serveraddr, sizeof(serveraddr));
-	if (retval == SOCKET_ERROR) exit(1);
-
-	retval = listen(sock, SOMAXCONN);
-	if (retval == SOCKET_ERROR) exit(1);
-
+	int retval = NULL;
+	SOCKET sock = *InitServerSocket6(&retval);
+	
 	SOCKET clientsock;
 	struct sockaddr_in6 clientaddr;
 	int addrlen;

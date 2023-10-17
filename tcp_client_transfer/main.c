@@ -8,7 +8,7 @@ int main() {
 		exit(1);
 	}
 
-	//FixedTcp6Client();
+	FixedTcp6Client();
 
 	WSACleanup();
 

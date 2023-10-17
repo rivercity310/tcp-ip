@@ -127,9 +127,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="common.c" />
     <ClCompile Include="fixed_server.c" />
     <ClCompile Include="main.c" />
-    <ClCompile Include="VariableTcpServer.c" />
+    <ClCompile Include="variable_server.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="common.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
