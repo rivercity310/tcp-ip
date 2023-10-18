@@ -127,6 +127,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="close_on_transfer_client.c" />
     <ClCompile Include="common.c" />
     <ClCompile Include="fixed_client.c" />
     <ClCompile Include="fixed_variable_client.c" />

@@ -3,6 +3,7 @@
 extern void FixedTcpServer6();
 extern void VariableTcpServer4();
 extern void FixedVariableTcpServer4();
+extern void CloseOnTransferServer6();
 
 int main() {
 	WSADATA wsa;
@@ -10,9 +11,10 @@ int main() {
 		exit(1);
 	}
 
-	// FixedTcpServer6();
+	//FixedTcpServer6();
 	//VariableTcpServer4();
-	FixedVariableTcpServer4();
+	//FixedVariableTcpServer4();
+	CloseOnTransferServer6();
 
 	WSACleanup();
 	return 0;

@@ -30,6 +30,9 @@
     <ClCompile Include="fixed_variable_client.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="close_on_transfer_client.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="common.h">
