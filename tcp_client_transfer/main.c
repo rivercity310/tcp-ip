@@ -9,8 +9,8 @@ int main() {
 		exit(1);
 	}
 
-	FixedTcpClient6();
-	// VariableTcpClient4();
+	// FixedTcpClient6();
+	VariableTcpClient4();
 
 	WSACleanup();
 
