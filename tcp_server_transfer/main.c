@@ -2,6 +2,7 @@
 
 extern void FixedTcpServer6();
 extern void VariableTcpServer4();
+extern void FixedVariableTcpServer4();
 
 int main() {
 	WSADATA wsa;
@@ -10,9 +11,9 @@ int main() {
 	}
 
 	// FixedTcpServer6();
-	VariableTcpServer4();
+	//VariableTcpServer4();
+	FixedVariableTcpServer4();
 
 	WSACleanup();
-
 	return 0;
 }

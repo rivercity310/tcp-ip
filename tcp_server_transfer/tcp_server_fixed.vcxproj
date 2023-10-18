@@ -129,6 +129,7 @@
   <ItemGroup>
     <ClCompile Include="common.c" />
     <ClCompile Include="fixed_server.c" />
+    <ClCompile Include="fixed_variable_server.c" />
     <ClCompile Include="main.c" />
     <ClCompile Include="variable_server.c" />
   </ItemGroup>

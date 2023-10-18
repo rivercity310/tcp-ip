@@ -27,6 +27,9 @@
     <ClCompile Include="common.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="fixed_variable_server.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="common.h">

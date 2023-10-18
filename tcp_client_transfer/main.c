@@ -2,6 +2,7 @@
 
 extern void FixedTcpClient6();
 extern void VariableTcpClient4();
+extern void FixedVariableTcpClient4();
 
 int main() {
 	WSADATA wsa;
@@ -10,7 +11,8 @@ int main() {
 	}
 
 	// FixedTcpClient6();
-	VariableTcpClient4();
+	//VariableTcpClient4();
+	FixedVariableTcpClient4();
 
 	WSACleanup();
 
