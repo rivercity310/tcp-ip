@@ -6,6 +6,20 @@ void CloseOnTransferServer6() {
 	int retval;
 	SOCKET sock = *InitServerSocket6(&retval);
 	
+	// 소켓의 '송신' 버퍼 크기 확인
+	int nBufSize = 0, nLen = sizeof(nBufSize);
+	if (getsockopt(sock, SOL_SOCKET, 
+		SO_SNDBUF, (char*)&nBufSize, &nLen) != SOCKET_ERROR) {
+		printf("Send Buffer size: %d\n", nBufSize);
+	}
+
+	// 소켓의 '수신' 버퍼 크기 확인
+	nBufSize = 0; nLen = sizeof(nBufSize);
+	if (getsockopt(sock, SOL_SOCKET,
+		SO_RCVBUF, (char*)&nBufSize, &nLen) != SOCKET_ERROR) {
+		printf("Receive Buffer size: %d\n", nBufSize);
+	}
+
 	SOCKET client_sock;
 	struct sockaddr_in6 clientaddr;
 	int addrlen;
