@@ -12,9 +12,9 @@ int main() {
 	}
 
 	// FixedTcpClient6();
-	// VariableTcpClient4();
+	VariableTcpClient4();
 	// FixedVariableTcpClient4();
-	CloseOnTransferClient6();
+	// CloseOnTransferClient6();
 
 	WSACleanup();
 

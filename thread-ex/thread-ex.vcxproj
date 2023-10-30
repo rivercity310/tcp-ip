@@ -128,7 +128,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.c" />
+    <ClCompile Include="MultiThreadTcpServer.c" />
     <ClCompile Include="Scheduling.c" />
+    <ClCompile Include="ThreadSuspend.c" />
     <ClCompile Include="WinApi.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
