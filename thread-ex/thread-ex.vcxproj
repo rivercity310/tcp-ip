@@ -127,6 +127,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CriticalSection.c" />
+    <ClCompile Include="Event.c" />
     <ClCompile Include="main.c" />
     <ClCompile Include="MultiThreadTcpServer.c" />
     <ClCompile Include="Scheduling.c" />

@@ -86,9 +86,12 @@ void MultiThreadServerEx() {
 		if (client_sock == INVALID_SOCKET) break;
 
 		// 스레드 생성
-		hThread = (HANDLE)_beginthreadex(NULL, 0, ProcessClient, (LPVOID)client_sock, 0, NULL);
+		hThread = (HANDLE)_beginthreadex(NULL, 0, ProcessClient, (LPVOID)client_sock, CREATE_SUSPENDED, NULL);
 		if (hThread == NULL) closesocket(client_sock);
-		else CloseHandle(hThread);
+		else {
+			ResumeThread(hThread);
+			CloseHandle(hThread);
+		}
 	}
 
 	closesocket(listen_sock);
