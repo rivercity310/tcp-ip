@@ -5,7 +5,7 @@
 
 static HANDLE hWriteEvent; /* 쓰기 완료 알림 이벤트 */
 static HANDLE hReadEvent;  /* 읽기 완료 알림 이벤트 */
-static buf[BUFSIZE];
+static int buf[BUFSIZE];
 
 // 1. Thread1은 공유 버퍼에 데이터 쓰기 작업을 한다.
 // 2. Thread2, Thread3은 공유 버퍼에 쓰여진 데이터를 읽는다.

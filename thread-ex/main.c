@@ -8,5 +8,5 @@ extern void CriticalSectionEx2();
 extern void EventEx();
 
 int main(int argc, char* argv[]) {
-	CriticalSectionEx();
+	MultiThreadServerEx();
 }
