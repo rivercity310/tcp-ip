@@ -7,7 +7,7 @@
 #define SERVERPORT4  9000
 #define SERVERADDR6  "::1"
 #define SERVERPORT6  9090
-#define BUFSIZE    512
+#define BUFSIZE      512
 
 #pragma comment(lib, "ws2_32")
 
@@ -38,10 +38,24 @@ static void UDPClient4() {
 
 	int retval;
 
+	// bind
+	struct sockaddr_in clientaddr;
+	clientaddr.sin_port = htons(52223);
+	clientaddr.sin_family = AF_INET;
+	clientaddr.sin_addr.s_addr = INADDR_ANY;
+	retval = bind(sock, (struct sockaddr*)&clientaddr, sizeof(clientaddr));
+	if (retval == SOCKET_ERROR) exit(1);
+
+	// 브로드캐스팅 활성화
+	DWORD bEnable = 1;
+	retval = setsockopt(sock, SOL_SOCKET, SO_BROADCAST,
+		(const char*)&bEnable, sizeof(bEnable));
+	if (retval == SOCKET_ERROR) exit(1);
+
 	// 소켓 주소 구조체 초기화
 	struct sockaddr_in serveraddr;
 	memset(&serveraddr, 0, sizeof(serveraddr));
-	inet_pton(AF_INET, SERVERADDR4, &serveraddr.sin_addr);
+	inet_pton(AF_INET, "255.255.255.255", &serveraddr.sin_addr);
 	serveraddr.sin_port = htons(SERVERPORT4);
 	serveraddr.sin_family = PF_INET;
 
@@ -74,6 +88,9 @@ static void UDPClient4() {
 		if (retval == SOCKET_ERROR) exit(1);
 
 		printf("[UDP Client] %d바이트 전송 완료\n", retval);
+		char addr[INET_ADDRSTRLEN];
+		inet_ntop(AF_INET, &serveraddr.sin_addr, addr, sizeof(addr));
+		printf("[%s:%d]\n", addr, ntohs(serveraddr.sin_port));
 
 		// 데이터 받기
 		addrlen = sizeof(peeraddr);
@@ -81,26 +98,34 @@ static void UDPClient4() {
 			(struct sockaddr*)&peeraddr, &addrlen);
 		if (retval == SOCKET_ERROR) exit(1);
 
+		inet_ntop(AF_INET, &peeraddr.sin_addr, addr, sizeof(addr));
+		printf("[%s:%d]\n", addr, ntohs(peeraddr.sin_port));
+		
 		// 송신지 IP 주소 체크
 		if (memcmp(&peeraddr, &serveraddr, sizeof(peeraddr))) {
-			printf("[오류] 잘못된 데이터입니다!\n");
-			break;
+			/*
+			if (strcmp(addr, "255.255.255.255") != 0) {
+				printf("[오류] 잘못된 데이터입니다!\n");
+				break;
+			}
+			*/
 		}
 
 		// 받은 데이터 출력
 		buf[retval] = '\0';
 		printf("[UDP Client] %d바이트를 받았습니다.\n", retval);
-		printf("[받은 데이터] %s\n", buf);
+		inet_ntop(AF_INET, &serveraddr.sin_addr, addr, sizeof(addr));
+		printf("[%s:%d] 받은 데이터: %s\n", addr, ntohs(serveraddr.sin_port), buf);
 	}
 
 	closesocket(sock);
 }
 
 static void UDPClient6() {
+	int retval;
+	
 	SOCKET sock = socket(PF_INET6, SOCK_DGRAM, IPPROTO_UDP);
 	if (sock == INVALID_SOCKET) exit(1);
-
-	int retval;
 
 	// 서버 구조체 초기화
 	struct sockaddr_in6 serveraddr;

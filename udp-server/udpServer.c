@@ -34,6 +34,32 @@ static DWORD WINAPI UDPServer4(LPVOID args) {
 	SOCKET sock = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP);
 	if (sock == INVALID_SOCKET) exit(1);
 
+	// 소켓 옵션 생성
+	
+	// 1. Receive 타임아웃 10초
+	DWORD optval = 10000;
+	int optlen = sizeof(optval);
+	retval = setsockopt(sock, SOL_SOCKET, SO_RCVTIMEO, (const char*)&optval, optlen);
+	if (retval == SOCKET_ERROR) exit(1);
+
+	// 2. 수신 버퍼 크기 늘리기
+	retval = getsockopt(sock, SOL_SOCKET, SO_RCVBUF, (char*)&optval, &optlen);
+	if (retval == SOCKET_ERROR) exit(1);
+	printf("수신 버퍼 크기(old) = %dByte\n", optval);
+	
+	optval *= 2;
+	retval = setsockopt(sock, SOL_SOCKET, SO_RCVBUF, (const char*)&optval, sizeof(optval));
+	if (retval == SOCKET_ERROR) exit(1);
+	
+	retval = getsockopt(sock, SOL_SOCKET, SO_RCVBUF, (char*)&optval, &optlen);
+	if (retval == SOCKET_ERROR) exit(1);
+	printf("수신 버퍼 크기(new) = %dByte\n", optval);
+
+	// 3. IP 주소 / 포트번호 재사용
+	optval = 1;
+	retval = setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, (const char*)&optval, sizeof(optval));
+	if (retval == SOCKET_ERROR) exit(1);
+
 	// bind
 	struct sockaddr_in serveraddr;
 	memset(&serveraddr, 0, sizeof(serveraddr));
