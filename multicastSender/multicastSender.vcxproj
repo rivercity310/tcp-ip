@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{655db2c5-2dcd-435f-8b2b-ea34138a1238}</ProjectGuid>
-    <RootNamespace>multicastReceiver</RootNamespace>
+    <ProjectGuid>{c15b6fe8-425a-4e98-b04f-654addc0d528}</ProjectGuid>
+    <RootNamespace>multicastSender</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -128,7 +128,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.c" />
-    <ClCompile Include="MulticastReceiver.c" />
+    <ClCompile Include="multicastSender.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

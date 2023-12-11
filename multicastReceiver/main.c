@@ -1,5 +1,5 @@
-extern void MulticastServer4();
+extern void MulticastReceiver();
 
 int main(int argc, char* argv[]) {
-	MulticastServer4();
+	MulticastReceiver();
 }
